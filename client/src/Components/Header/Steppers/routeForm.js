@@ -1,13 +1,15 @@
+import {useState} from "react"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
+import  {Map, GoogleApiWrapper} from "google-maps-react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box"
-import Select from "@material-ui/core/Select";
+import Geolocation from "./Geolocation"
 import { useForm, Controller } from "react-hook-form";
 import { PaystackButton } from 'react-paystack';
 import axios from "axios"
+import GooglePlacesAutocomplete from "react-google-places-autocomplete"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -28,7 +30,7 @@ const RouteForm = () => {
   
   const PUBLIC_KEY = "pk_test_86c6d47772a9557bd9bee8b2347935b9a889458c";
   const AMOUNT = 100000;
-
+  const [value, setValue] = useState("")
   const classes = useStyles();
   const { control, handleSubmit, reset } = useForm();
   
@@ -74,65 +76,73 @@ const onSubmitHandler = (data) => {
 
 
   return (
-  <div>
-      <Grid container spacing={1}>
     
-        <Grid item xs={12} sm={6}>
+  <div>
+    <Grid container spacing={1}>
+    <Grid item xs={12} sm={6}>
         <Box>
             <Typography variant="h6" color="primary">
               {" "}
               From
             </Typography> 
+            </Box>
+    <GooglePlacesAutocomplete
+    apiKey="AIzaSyB651uMy4Ki31HHnaRdpxndiphC29OM1iQ"
+    apiOptions={{language: "ng", region: "ng"}}
+    selectProps={{
+      value, 
+      onChange: setValue,
+      styles: {
+        input: (provided) => ({
+          ...provided,
+          color: "blue",
+        }),
+        option: (provided) => ({
+          ...provided,
+          color: "blue"
+        }),
 
-            <Controller
-              control={control}
-              name="from"
-              defaultValue=""
-              rules={{ required: true }}
-              render={({field}) => (
-                <Select
-                  size="small"
-                  {...field}
-                  className={classes.selectEmpty}
-                > 
-                  <MenuItem value="none">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="Under G">Under G </MenuItem> 
-                  <MenuItem value="Adenike"> Adenike </MenuItem>
-                  <MenuItem value="Stadium">Stadium </MenuItem>
-                  <MenuItem value="Others">Others </MenuItem>
-                </Select>
-              )}
-            />
-          </Box>
-        </Grid>
+        singleValue: (provided) => ({
+          ...provided,
+          color: "blue",
+        }),
+      },
+    }}
+    />
+      <Geolocation/> 
+    </Grid>
+       
       <Grid item xs={12} sm={6}>
       <Box>
             <Typography variant="h6" color="primary">
               {" "}
               To
             </Typography>
+            </Box>
+            <GooglePlacesAutocomplete
+    apiKey="AIzaSyB651uMy4Ki31HHnaRdpxndiphC29OM1iQ"
+    apiOptions={{language: "ng", region: "ng"}}
+    selectProps={{
+      value, 
+      onChange: setValue,
+      styles: {
+        input: (provided) => ({
+          ...provided,
+          color: "blue",
+        }),
+        option: (provided) => ({
+          ...provided,
+          color: "blue"
+        }),
 
-            <Controller
-              name="to"
-              defaultValue=""
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  className={classes.selectEmpty}
-                >
-                  <MenuItem value="None">None</MenuItem>
-                  <MenuItem value="FAG">FAG</MenuItem>
-                  <MenuItem value="Management">Management</MenuItem>
-                  <MenuItem value="Software Institute">Software Institute</MenuItem>
-                  <MenuItem value="Others">Others</MenuItem>
-                </Select>
-              )}
-            />
-          </Box>
+        singleValue: (provided) => ({
+          ...provided,
+          color: "blue",
+        }),
+      },
+    }}
+    />
+           
         </Grid>
         </Grid>
         <Box   sx={{
@@ -157,6 +167,7 @@ const onSubmitHandler = (data) => {
               </Box>
               
     </div>
+  
   );
 };
 
