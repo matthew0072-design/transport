@@ -1,10 +1,17 @@
 var express = require("express");
 var router = express.Router();
-
+const jwt = require("jsonwebtoken")
+const Booking = require("../src/Model/bookingModel")
 const User = require("../src/Model/userModel");
-const Auth = require("../src/Middleware/auth");
 
-router.post("/signup", async (req, res, next) => {
+
+const MAX_AGE = 3 * 24 * 60 * 60;
+const generateAuthToken = (id) => {
+  return jwt.sign({id}, "neverfearchallenge", {expiresIn: MAX_AGE});
+
+}
+
+router.post("/register-user", async (req, res) => {
   try {
     const user = await new User({
       Surname: req.body.Surname,
@@ -15,10 +22,9 @@ router.post("/signup", async (req, res, next) => {
       password: req.body.password,
       confirmedPassword: req.body.confirmedPassword,
     }).save();
-    const token = await user.generateAuthToken();
-    console.log({ user, token });
-
-    res.status(201).send({ user });
+    const token = generateAuthToken(user._id);
+    console.log({token});
+    res.status(201).json({token})
   } catch (e) {
     console.log(e);
     res.send(e).status(400);
@@ -31,16 +37,16 @@ router.post("/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
-    const token = await user.generateAuthToken();
-    console.log(user);
-    res.status(200).send({ user });
+    const token = generateAuthToken(user._id);
+    console.log(token); 
+    res.status(200).json({ token });
   } catch (e) {
     console.log(e);
     res.status(404).send(e);
   }
 });
 
-router.post("/book", Auth, async (req, res) => {
+router.post("/book", async (req, res) => {
   try {
     res.send(req.user);
   } catch (e) {
@@ -48,14 +54,29 @@ router.post("/book", Auth, async (req, res) => {
   }
 });
 
-router.post("/logout", Auth, async (req, res) => {
+
+router.get("/user", async (req, res) => {
+  let currentUser;
+    if (req.cookies.user) {
+        const token = req.cookies.user;
+        const decoded = await jwt.verify(token, "neverfearchallenge");
+        currentUser = await User.findById(decoded.id)
+         
+      } else {
+        currentUser =  null;
+      }    
+
+      res.status(200).send({ currentUser});
+})
+
+
+router.get("/logout", async (req, res) => {
   try {
-    req.user.tokens = req.user.tokens.filter((token) => {
-      return token.token !== req.token;
-    });
-    await req.user.save();
-    res.status(200).send(`User logout successfully`);
-  } catch (e) {
+    res.status(200).send('user is logged out');
+      
+    }
+    
+  catch (e) {
     console.log(e);
     res.status(501).send(e);
   }

@@ -1,9 +1,12 @@
+import {useContext} from "react";
 import TextField from "@material-ui/core/TextField";
 import { Controller, useForm } from "react-hook-form";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import {useHistory} from "react-router-dom";
+import {useCookies} from "react-cookie";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Header from "../Header";
@@ -14,6 +17,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Image from "../../../assets/download.jpg";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { UserContext } from "../../Context/useContext"; 
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bolder",
     borderRadius: "2rem",
     marginTop: theme.spacing(4),
+
+    "&:hover": {
+      backgroundColor: "red",
+    },
   },
   avatar: {
     margin: "auto",
@@ -63,25 +72,48 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = () => {
   const classes = useStyles();
+  let history = useHistory();
+  const { setUser } = useContext(UserContext);
 
+  const [cookies, setCookie] = useCookies(["user"])
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm();
 
+
+  const setUserContext = async () => {
+    return await axios.get('/user').then(res => {         
+        setUser(res.data.currentUser);  
+                             
+        }).catch((err) => {
+        console.log(err)
+    })
+  }
+
   const onSubmitHandler = (data) => {
-    console.log(`submitted Successfully ${data}`);
+    console.log({data});
 
     axios
       .post("http://localhost:5000/login", data)
-      .then((response) => {
-        location.assign("/");
+      .then( async (response) => {
+        
+        createCookie(response.data.token)
+        await setUserContext();
+        history.push("/")
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+const createCookie = (token) => {
+  setCookie("user", token, {path: "/"})
+}
+
+
+
 
   return (
     <div className={classes.root}>
@@ -164,14 +196,13 @@ const Login = () => {
           </Button>
         </Box>
         <Box color="tomato" ml={10} clone>
-          <Button component={Link} to="/register" variant="text">
+          <Button component={Link} to="/register-user" variant="text">
             register instead
           </Button>
         </Box>
       </Paper>
       <HomeFooter />
     </div>
-  );
-};
-
+  )
+}
 export default Login;

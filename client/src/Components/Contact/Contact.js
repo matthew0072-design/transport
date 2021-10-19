@@ -96,7 +96,8 @@ export default function Contact() {
       .post("http://localhost:5000/contact", data)
       .then((response) =>{
         console.log(response.data)
-        reset()
+        
+        
         
       })
       .catch((error) => console.log(error));

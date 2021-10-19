@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import { UserContext } from "../Context/useContext";
 import Logistics from "./Logistics";
 import Account from "./Account";
 import Modal from "./Steppers/Modal";
@@ -9,10 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import About from "./About";
 import Avatar from "@material-ui/core/Avatar";
 import Image from "../../assets/download.jpg";
-
 import Button from "@material-ui/core/Button";
-
 import { Link } from "react-router-dom";
+import Logout from "./Signup/Logout"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,9 +52,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
+  
   const classes = useStyles();
-
   const [open, setOpen] = useState(false);
+  const { user } = useContext(UserContext);
 
   const handleOpen = () => {
     setOpen(true);
@@ -95,7 +96,8 @@ const Header = () => {
           >
             CONTACT US
           </Button>
-          <Account />
+          {user ? (<Logout />)
+          : (<Account />) }
         </Toolbar>
       </AppBar>
     </div>

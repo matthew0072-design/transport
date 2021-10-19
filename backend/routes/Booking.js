@@ -1,23 +1,26 @@
 var express = require("express")
 var router = express.Router()
 const Booking = require("../src/Model/bookingModel")
-const Auth = require("../src/Middleware/auth");
+const User = require("../src/Model/userModel")
 
 
-router.post("/booking", Auth, async(req, res, next) => {
+router.post("/booking", async(req, res) => {
     
-
+        const user = await User.findById({})    
     try {
         const booking = await new Booking({
             from: req.body.from,
-            to: req.body.to
+            to: req.body.to,
+            owner: req.user._id
         }).save()
-
-        res.status(201).json(booking)
+            await user.populate("books").execPopulate()
+        res.status(201).json({})
         console.log(booking)
-    }catch (e) {
+    } catch (e) {
         console.log(e)
     }
 })
+
+
 
 module.exports = router;

@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import { UserContext } from "../../Context/useContext"; 
 import TextField from "@material-ui/core/TextField";
+import {useHistory} from "react-router-dom";
 import Select from "@material-ui/core/Select";
+import {useCookies} from "react-cookie";
 import Image from "../../../assets/download.jpg";
 import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -57,25 +60,25 @@ const useStyles = makeStyles((theme) => ({
 
   registerBtn: {
     marginTop: theme.spacing(3),
-    backgroundColor: "blue",
+    backgroundColor: "tomato",
     color: "white",
     textAlign: "center",
     width: "30%",
     height: 50,
     fontWeight: "bold",
     borderRadius: "30px",
-
     marginLeft: theme.spacing(20),
     marginRight: theme.spacing(10),
 
     "&:hover": {
-      backgroundColor: "tomato",
+      backgroundColor: "red",
     },
   },
 }));
 
 const Signup = () => {
   const classes = useStyles();
+  let history = useHistory();
 
   const validationSchema = yup.object().shape({
     surname: yup.string().required("surname is required"),
@@ -107,6 +110,9 @@ const Signup = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  const [cookies, setCookie] = useCookies(["user"])
+  const { setUser } = useContext(UserContext);
+
   const onSubmit = (data) => {
     console.log(data);
 
@@ -114,8 +120,8 @@ const Signup = () => {
       .post("http://localhost:5000/register-driver", data)
       .then((response) => console.log(data))
       .catch((error) => console.log(error));
-  };
-
+  };   
+     
   return (
     <div className={classes.root}>
       <Header />

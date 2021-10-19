@@ -1,9 +1,10 @@
-import { useState, Fragment } from "react";
+import { useContext, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import RouteForm  from "./routeForm";
 import Modal from "@material-ui/core/Modal";
+import {Redirect} from "react-router-dom"
 import Button from "@material-ui/core/Button"
-
+import { UserContext } from "../../Context/useContext";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,15 +28,15 @@ export default function SimpleModal({open, handleClose}) {
   // const [open, setOpen] = useState(false);
   // const handleOpen = () => setOpen(true);
   // const handleClose = () => setOpen(false);
-
+  const { user } = useContext(UserContext);
   return (
     <Fragment>
-      
-       <Modal  open={open} onClose={handleClose}>
+      {user ?
+       (<Modal  open={open} onClose={handleClose}>
         <div className={classes.paper} >
           <RouteForm />
         </div>
-      </Modal> 
+      </Modal>) : (<Redirect to='/login'/> )} 
       
     </Fragment>
   );

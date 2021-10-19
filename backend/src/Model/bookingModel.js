@@ -11,11 +11,15 @@ const bookingSchema = new Schema({
       type: String,
       required: [true, "Your Destination is required"],
     },
-
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
     
 
 })
 
-const bookingModel = mongoose.model("book", bookingSchema);
+const bookingModel = mongoose.model("Book", bookingSchema);
 
 module.exports = bookingModel;

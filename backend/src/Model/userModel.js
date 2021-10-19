@@ -43,23 +43,16 @@ const userSchema = new Schema({
     trim: true,
     minLength: 6,
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  
 });
 
-userSchema.methods.generateAuthToken = async function () {
-  const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, "neverfearchallenge");
-  user.tokens = user.tokens.concat({ token });
-  await user.save();
-  return token;
-};
+// userSchema.methods.generateAuthToken = async function () {
+//   const user = this;
+//   const token = jwt.sign({ _id: user._id.toString()}, "neverfearchallenge");
+//   res.cookie("jwt", token, {httpOnly: true, maxAge: 60*60*1000})
+//   await user.save();
+  
+// };
 
 userSchema.methods.toJSON = function () {
   const user = this;
@@ -83,6 +76,13 @@ userSchema.statics.findByCredentials = async function (email, password) {
 
   return user;
 };
+
+
+userSchema.virtual("books", {
+  ref: "Book",
+  localField: "_id",
+  foreignField: "owner"
+})
 
 userSchema.pre("save", async function (next) {
   const user = this;

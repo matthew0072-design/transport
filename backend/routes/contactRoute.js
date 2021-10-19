@@ -1,10 +1,11 @@
 const express = require("express");
-const Auth = require("../src/Middleware/auth");
+const Auth = require("../src/Middleware/Auth");
 const nodemailer = require("nodemailer");
 const router = express.Router();
 
 
 router.post("/contact", Auth, (req, res, next) => {
+  
   let {name, email, subject, number, message} = req.body
      
 

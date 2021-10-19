@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
+import {useHistory} from "react-router-dom";
+import { UserContext } from "../../Context/useContext"; 
 import Paper from "@material-ui/core/Paper";
+import {useCookies} from "react-cookie";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Image from "../../../assets/download.jpg";
 import Grid from "@material-ui/core/Grid";
+import Loading from "../../Utility/Loading"
 import Typography from "@material-ui/core/Typography";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,6 +26,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
+  
   root: {
     position: "relative",
     display: "flex",
@@ -57,25 +62,26 @@ const useStyles = makeStyles((theme) => ({
 
   registerBtn: {
     marginTop: theme.spacing(3),
-    backgroundColor: "blue",
+    backgroundColor: "tomato",
     color: "white",
     textAlign: "center",
     width: "30%",
     height: 50,
     fontWeight: "bold",
     borderRadius: "30px",
-
     marginLeft: theme.spacing(20),
     marginRight: theme.spacing(10),
 
     "&:hover": {
-      backgroundColor: "tomato",
+      backgroundColor: "red",
     },
   },
 }));
 
 const Signup = () => {
   const classes = useStyles();
+    let history = useHistory();
+    const { setUser } = useContext(UserContext);
 
   const validationSchema = yup.object().shape({
     Surname: yup.string().required("surname is required"),
@@ -106,17 +112,42 @@ const Signup = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    axios
-      .post("http://localhost:5000/signup", data)
-      .then((response) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+ 
+
+const [cookies, setCookie] = useCookies(["user"])
+
+const registerUser =  (data) => {
+  console.log({data})
+  axios
+    .post("http://localhost:5000/register-user", data)
+    .then(async (response) => {
+      console.log(response);
+      createCookie(response.data.token)
+      await setUserContext();
+
+      history.push("/")
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+const createCookie = (token) => {
+  setCookie("user", token, {path: "/"})
+}
+
+
+const setUserContext = async () => {
+  return await axios.get('/user')
+  .then(res => {         
+      setUser(res.data.currentUser);  
+                          
+      }).catch((err) => {
+    
+      console.log(err)
+  })
+}
+
 
   return (
     <div className={classes.root}>
@@ -368,7 +399,7 @@ const Signup = () => {
           <Box clone>
             <Button
               variant="contained"
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(registerUser)}
               className={classes.registerBtn}
             >
               <FontAwesomeIcon icon="user-plus" size="lg" /> Register

@@ -1,10 +1,12 @@
 import {useState} from "react"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles";
-import  {Map, GoogleApiWrapper} from "google-maps-react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box"
+import Box from "@material-ui/core/Box";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import {useHistory} from "react-router-dom"
 import Geolocation from "./Geolocation"
 import { useForm, Controller } from "react-hook-form";
 import { PaystackButton } from 'react-paystack';
@@ -27,10 +29,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RouteForm = () => {
-  
+  let history = useHistory()
+
   const PUBLIC_KEY = "pk_test_86c6d47772a9557bd9bee8b2347935b9a889458c";
   const AMOUNT = 100000;
-  const [value, setValue] = useState("")
+  const [value, setValue] = useState(null)
   const classes = useStyles();
   const { control, handleSubmit, reset } = useForm();
   
@@ -63,10 +66,14 @@ const RouteForm = () => {
 };
 
 const onSubmitHandler = (data) => {
+  
   console.log(data)
+
   axios.post("http://localhost:5000/booking", data)
-  .then(response => {console.log("successful")
-  location.assign("/")    
+  .then(response => {
+    createCookie(response.data.token)
+    console.log("successful")
+  history.push("/")    
 })
   .catch(error => console.log(error))
   
@@ -86,30 +93,33 @@ const onSubmitHandler = (data) => {
               From
             </Typography> 
             </Box>
-    <GooglePlacesAutocomplete
-    apiKey="AIzaSyB651uMy4Ki31HHnaRdpxndiphC29OM1iQ"
-    apiOptions={{language: "ng", region: "ng"}}
-    selectProps={{
-      value, 
-      onChange: setValue,
-      styles: {
-        input: (provided) => ({
-          ...provided,
-          color: "blue",
-        }),
-        option: (provided) => ({
-          ...provided,
-          color: "blue"
-        }),
+            <Box>
+                    
+                    <Controller
+                      control={control}
+                      defaultValue=""
+                      className={classes.selectControl}
+                      name="from"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <Select
+                          variant="outlined"
+                          className={classes.selectEmpty}
+                          size="small"
+                          {...field}
+                        >
 
-        singleValue: (provided) => ({
-          ...provided,
-          color: "blue",
-        }),
-      },
-    }}
-    />
-      <Geolocation/> 
+                          <MenuItem value="underg"> Under G </MenuItem>
+                          <MenuItem value="adenike"> Adenike</MenuItem>
+                          <MenuItem value="stadium"> Stadium</MenuItem>
+                          <MenuItem value="aroje"> Aroje </MenuItem>
+                          <MenuItem value="Yoaco"> Yoaco</MenuItem>
+                          <MenuItem value="General"> General </MenuItem>
+                        </Select>
+                      )}
+                    />
+                  </Box>
+      
     </Grid>
        
       <Grid item xs={12} sm={6}>
@@ -119,30 +129,30 @@ const onSubmitHandler = (data) => {
               To
             </Typography>
             </Box>
-            <GooglePlacesAutocomplete
-    apiKey="AIzaSyB651uMy4Ki31HHnaRdpxndiphC29OM1iQ"
-    apiOptions={{language: "ng", region: "ng"}}
-    selectProps={{
-      value, 
-      onChange: setValue,
-      styles: {
-        input: (provided) => ({
-          ...provided,
-          color: "blue",
-        }),
-        option: (provided) => ({
-          ...provided,
-          color: "blue"
-        }),
-
-        singleValue: (provided) => ({
-          ...provided,
-          color: "blue",
-        }),
-      },
-    }}
-    />
-           
+            
+                    <Controller
+                      control={control}
+                      defaultValue=""
+                      name="to"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <Select
+                          variant="outlined"
+                          className={classes.selectEmpty}
+                          size="small"
+                          
+                          {...field}
+                        >
+                          <MenuItem value="underg"> Under G </MenuItem>
+                          <MenuItem value="adenike"> Adenike</MenuItem>
+                          <MenuItem value="stadium"> Stadium</MenuItem>
+                          <MenuItem value="aroje"> Aroje </MenuItem>
+                          <MenuItem value="Yoaco"> Yoaco</MenuItem>
+                          <MenuItem value="General"> General </MenuItem>
+                        </Select>
+                      )}
+                    />
+                  
         </Grid>
         </Grid>
         <Box   sx={{

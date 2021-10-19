@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const Driver = require("../src/Model/driverModel");
-const Auth = require("../src/Middleware/auth");
+//const Auth = require("../src/Middleware/auth");
 
 router.post("/register-driver", async (req, res, next) => {
   try {
@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", Auth, async (req, res) => {
+router.post("/logout", async (req, res) => {
   try {
     req.driver.tokens = req.driver.tokens.filter((token) => {
       return token.token !== req.token;
