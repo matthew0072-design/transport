@@ -83,7 +83,7 @@ const Header = () => {
           </Button>
 
           <Button className={classes.defaultColor} onClick={handleOpen}>
-            LMTS
+            BOOK
           </Button>
 
           {open && <Modal open={open} handleClose={handleClose} />}

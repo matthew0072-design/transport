@@ -1,190 +1,157 @@
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
+import {useState, useEffect} from "react";
+import Modal from "@material-ui/core/Modal"
+import { UserContext } from "../../Context/useContext"; 
 import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import { useForm, Controller, useFormContext } from "react-hook-form";
-import Grid from "@material-ui/core/Grid";
-import { Link } from "react-router-dom";
-import { Select, FormControl, MenuItem } from "@material-ui/core";
+import { PaystackButton } from 'react-paystack';
+import {useHistory} from "react-router-dom"
+import {makeStyles} from "@material-ui/core/styles";
+import Header from "../Header"
+import HomeFooter from "../../HomeBook/HomeFooter"
+import Image from "../../../assets/bike6.jpg"
+import axios from "axios";
+const useStyles = makeStyles(theme => ({
+
+root: {
+    
+
+    
+    height: 500,
+    width: "100vw",
+    
+    marginTop: theme.spacing(8),
+    backgroundPosition: "center center",
+    backgroundImage: `url(${Image})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    
+},
 
 
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-        justifyContent: "center",
-        // border: "2px solid yellow",
-    },
-
-    paper: {
-        width: 900,
-        padding: theme.spacing(1),
-    },
-
-    textField: {
-        width: 300,
-        height: "2.5rem",
-    },
-
-    boxPay: {
+    box: {  
+        marginTop: "10rem",
+        marginBottom: "10rem",
+        marginLeft: "32rem",
+        marginRight: "32rem",
         position: "relative",
-        left: "15rem",
-        backgroundColor: "tomato",
-        marginTop: theme.spacing(2),
-        marginBottom: theme.spacing(2),
-        color: "white",
-        width: 150,
-        outline: "none",
-        border: "none",
+    color: "white",
+    width: 300,
+    height: 100,
+    backgroundColor: "tomato",
+    fontSize: "2rem",
+    borderRadius: "2rem",
+    border: "none",
+    outline: "none",
 
-        padding: theme.spacing(1),
-        "&:hover": {
-            backgroundColor: "magenta",
-        },
-    },
-}));
+    "&:hover": {
+        backgroundColor: "red",
+        cursor: "pointer"
+      },
+},
+
+dimDiv: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: 465,
+    width: "100%",
+    backgroundColor: `rgba(0,0,0,.3)`,
+    zIndex: 0,
+
+  }
+
+}))
+
+
+
+const PUBLIC_KEY = "pk_test_86c6d47772a9557bd9bee8b2347935b9a889458c";
+const AMOUNT = 10000;
+
+    const config = {
+        reference: (new Date()).getTime().toString(),
+        email: "faggymatt007@gmail.com",
+        amount:AMOUNT,
+        publicKey:PUBLIC_KEY,
+      };
+
 
 const PaymentForm = () => {
-    const { control, handleSubmit } = useForm();
-    const classes = useStyles();
 
-    const years = ["2015", "2018", "2019", "2020", "2021", "2022"];
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
+    let history = useHistory()
+    //const { setUser } = useContext(UserContext); 
+    const [book, setBook] = useState("")
 
-   
-
+    // const setUserContext = async () => {
+    //   return await axios.get('/user').then(res => {         
+    //       const id = setUser(res.data.currentUser);  
+    //         console.log(id)  
+    //       }).catch((err) => {
+    //       console.log(err)
+    //   })
+    // }
      
-  
 
-    return (
+
+      const handlePaystackSuccessAction = () => {
+       //console.log(reference);
+       
+       // setUserContext()
+       useEffect(() => {
+
+         async function getBooking() {
+          await axios.get(`http://localhost:5000/getBooking`)
+          .then(res => {
+            setBook(res.data.booking)
+            history.push('/')
+          } 
+         )
+         .catch(err => console.log(err))
+         }
+          getBooking()
+
+       }, [])
+         
+      
+      };
+    
+      const handlePaystackCloseAction = () => {
+        
+        console.log('closed')
+      }
+    
+    
+      const componentProps = {
+        ...config,
+        text: 'Make Payment',
+        onSuccess: handlePaystackSuccessAction,
+        onClose: handlePaystackCloseAction,
+    };
+
+    const [open, setOpen] = useState(false);
+    const classes = useStyles()
+
+    const handleOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
+    
+    return(
+        
         <div className={classes.root}>
-            <Paper elevation={1} className={classes.paper}>
-                <Box>
-                    <Typography variant="h4" color="primary" align="center">
-                        {" "}
-                        Payment
-                    </Typography>
-                </Box>
-                <Box>
-                    <Typography variant="h5" color="darkgray" align="center">
-                        Pay with Credit Card
-                    </Typography>
-                </Box>
-
-                <Grid container spacing={2}>
-                    <Box mt={1} height={40}>
-                        <Grid item xs={12} sm={6}>
-                            {" "}
-                            <Controller
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: true }}
-                                name="otherNames"
-                                render={({ field }) => (
-                                    <TextField
-                                        variant="outlined"
-                                        id="otherNames"
-                                        placeholder="Your Card Number"
-                                        margin="dense"
-                                        className={classes.textField}
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </Grid>
-                    </Box>
-                    <Box mt={1} height={40} ml={5} clone>
-                        <Grid item xs={12} sm={6}>
-                            {" "}
-                            <Controller
-                                control={control}
-                                name="expire"
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <Select
-                                        {...field}
-                                        variant="outlined"
-                                        className={classes.textField}
-                                    >
-                                        {months.map((month, index) => (
-                                            <MenuItem key={index} value={month}>
-                                                {month}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                )}
-                            />
-                        </Grid>
-                    </Box>
-                    <Box mt={3} height={40}>
-                        <Grid item xs={12} sm={6}>
-                            <Controller
-                                control={control}
-                                name="year"
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <Select
-                                        {...field}
-                                        variant="outlined"
-                                        className={classes.textField}
-                                    >
-                                        {years.map((year, index) => (
-                                            <MenuItem key={index} value={year}>
-                                                {year}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                )}
-                            />
-                        </Grid>
-                    </Box>
-                    <Box mt={2} ml={6} height={40}>
-                        <Grid item xs={12} sm={6}>
-                            {" "}
-                            <Controller
-                                control={control}
-                                defaultValue=""
-                                rules={{ required: true }}
-                                name="cvv"
-                                render={({ field }) => (
-                                    <TextField
-                                        variant="outlined"
-                                        id="cvv"
-                                        placeholder="CVV"
-                                        margin="dense"
-                                        className={classes.textField}
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </Grid>
-                    </Box>
-                </Grid>
-                <Box className={classes.boxPay} clone>
-                    <Button component={Link} to="/" variant="outlined">
-                        {" "}
-                        <Typography> Pay Now </Typography>
-                    </Button>
-
-                
-                </Box>
-            </Paper>
+            <div className={classes.dimDiv}></div>
+            <Header/>
+        
+            <Box className={classes.box} clone>
+            <PaystackButton {...componentProps} /> 
+            </Box>
+        
+        
+        
+<HomeFooter/>
         </div>
-    );
-};
+    )
+}
+
 export default PaymentForm;

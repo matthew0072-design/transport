@@ -1,17 +1,17 @@
-import {useState} from "react"
+import {useState, useContext} from "react"
 import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles";
+import {useCookies} from "react-cookie";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import { UserContext } from "../../Context/useContext"; 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import {useHistory} from "react-router-dom"
-import Geolocation from "./Geolocation"
 import { useForm, Controller } from "react-hook-form";
-import { PaystackButton } from 'react-paystack';
 import axios from "axios"
-import GooglePlacesAutocomplete from "react-google-places-autocomplete"
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,49 +31,41 @@ const useStyles = makeStyles((theme) => ({
 const RouteForm = () => {
   let history = useHistory()
 
-  const PUBLIC_KEY = "pk_test_86c6d47772a9557bd9bee8b2347935b9a889458c";
-  const AMOUNT = 100000;
+  
   const [value, setValue] = useState(null)
   const classes = useStyles();
   const { control, handleSubmit, reset } = useForm();
-  
+  const { setUser } = useContext(UserContext);  
+  const [cookies, setCookie] = useCookies(["bookedId"])
 
+const setUserContext = async () => {
+  return await axios.get('/user').then(res => {         
+      setUser(res.data.currentUser);  
+                           
+      }).catch((err) => {
+      console.log(err)
+  })
+}
 
-  const config = {
-    reference: (new Date()).getTime().toString(),
-    email: "faggymatt007@gmail.com",
-    amount:AMOUNT,
-    publicKey:PUBLIC_KEY,
-  };
-
-
-  const handlePaystackSuccessAction = (reference) => {
-        
-    console.log(reference);
-  };
-
-  const handlePaystackCloseAction = () => {
-    
-    console.log('closed')
-  }
-
-
-  const componentProps = {
-    ...config,
-    text: 'Pay Now',
-    onSuccess: (reference) => handlePaystackSuccessAction(reference),
-    onClose: handlePaystackCloseAction,
-};
+const createCookie = (id) => {
+  setCookie("bookedId", id, {path: "/"})
+}
 
 const onSubmitHandler = (data) => {
   
-  console.log(data)
+  
+  data.bookedUser = localStorage.getItem('LoggedUserId')
+  console.log("BOOK DATA: ",data)
+
 
   axios.post("http://localhost:5000/booking", data)
   .then(response => {
-    createCookie(response.data.token)
-    console.log("successful")
-  history.push("/")    
+    setUserContext()
+    
+    let bookedId = response.data.bookedId;
+    console.log(response);
+    createCookie(bookedId)
+ history.push("/payment")    
 })
   .catch(error => console.log(error))
   

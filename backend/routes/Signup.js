@@ -5,7 +5,7 @@ const Booking = require("../src/Model/bookingModel")
 const User = require("../src/Model/userModel");
 
 
-const MAX_AGE = 3 * 24 * 60 * 60;
+const MAX_AGE =  3 * 24 * 60 * 60;
 const generateAuthToken = (id) => {
   return jwt.sign({id}, "neverfearchallenge", {expiresIn: MAX_AGE});
 
@@ -22,9 +22,11 @@ router.post("/register-user", async (req, res) => {
       password: req.body.password,
       confirmedPassword: req.body.confirmedPassword,
     }).save();
+    
     const token = generateAuthToken(user._id);
+    let loggedUserId = user._id
     console.log({token});
-    res.status(201).json({token})
+    res.status(201).json({token, loggedUserId})
   } catch (e) {
     console.log(e);
     res.send(e).status(400);
@@ -37,9 +39,11 @@ router.post("/login", async (req, res) => {
       req.body.email,
       req.body.password
     );
+    
     const token = generateAuthToken(user._id);
+    let loggedUserId = user._id
     console.log(token); 
-    res.status(200).json({ token });
+    res.status(200).json({ token, loggedUserId });
   } catch (e) {
     console.log(e);
     res.status(404).send(e);
@@ -72,6 +76,7 @@ router.get("/user", async (req, res) => {
 
 router.get("/logout", async (req, res) => {
   try {
+    
     res.status(200).send('user is logged out');
       
     }

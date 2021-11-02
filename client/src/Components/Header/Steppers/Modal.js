@@ -25,9 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SimpleModal({open, handleClose}) {
   const classes = useStyles();
-  // const [open, setOpen] = useState(false);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
+  
   const { user } = useContext(UserContext);
   return (
     <Fragment>

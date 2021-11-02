@@ -122,6 +122,8 @@ const registerUser =  (data) => {
     .post("http://localhost:5000/register-user", data)
     .then(async (response) => {
       console.log(response);
+      let loggedUserId = response.data.loggedUserId;
+        localStorage.setItem('LoggedUserId',loggedUserId)
       createCookie(response.data.token)
       await setUserContext();
 

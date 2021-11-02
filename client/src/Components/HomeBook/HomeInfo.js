@@ -1,76 +1,79 @@
-import Slider from "react-slick";
+import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
-import Image2 from "../../assets/img2.jpg";
-import Image8 from "../../assets/img8.jpg";
-import Image9 from "../../assets/img9.jpg";
-import Image12 from "../../assets/img12.jpg";
-import Image13 from "../../assets/img13.jpg";
-import Image18 from "../../assets/img18.jpg";
-import Image20 from "../../assets/img20.jpg";
-import Image22 from "../../assets/img22.jpg";
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "ghostwhite",
-    height: 600,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F77F00",
+    height: 400,
+    color: "white",
+    
   },
 
-  image: {
-    height:600,
-    width: "100%",
-    objectFit: "cover",
-  },
+lmts: {
+  width: 900,
+  //border: "3px solid blue",
+  textAlign: "left",
+  height: 300
+},
+
+safe: {
+  margin: theme.spacing(5),
+  display: "flex",
+  justifyContent: "space-around",
+  alignItems: "space-around",
+  
+},
+
+flexItem: {
+  width: 200,
+  
+  //border: "3px solid red"
+},
+
+typoColor: {
+  color: "navy",
+  fontWeight: 600,
+},
+  
 }));
 
 const HomeInfo = () => {
   const classes = useStyles();
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    autoplaySpeed: 5000,
-    autoplay: true,
-    easing: "linear",
-    fade: true,
-    speed: 7000,
-    slideToShow: 1,
-    slideToScroll: 1,
-  };
+  
 
   return (
     <div className={classes.root}>
-      <Slider {...settings}>
-        
-        <div>
-          <img src={Image2} className={classes.image} />
-        </div>
-        <div>
-          <img src={Image8} className={classes.image} />
-        </div>
-        <div>
-          <img src={Image9} className={classes.image} />
-        </div>
-        <div>
-          <img src={Image12} className={classes.image} />
-        </div>
-        <div>
-          <img src={Image13} className={classes.image} />
-        </div>
-        
-        <div>
-          <img src={Image18} className={classes.image} />
-        </div>
-        
-        <div>
-          <img src={Image20} className={classes.image} />
-        </div>
-        <div>
-          <img src={Image22} className={classes.image} />
-        </div>
-      </Slider>
+      <div className={classes.lmts}> 
+      <Typography variant="h5" align="center" className={classes.typoColor}> Why LMTS?</Typography>
+<Typography> The Motorcycle or Okada Industry has been an informal industry 
+  for a long time. The lack of proper regulations and professionalism gave rise to that.
+   LMTS plans to restructure this informal industry by providing tested, trusted and safe 
+   transportation for everyone  
+</Typography>
+<div className={classes.safe}> 
+  <div className={classes.flexItem}>
+<Typography variant="h5" align="center" className={classes.typoColor}>Safe</Typography>
+<Typography>Ride with trained, trusted and verified riders, each equipped with 
+  a hairnet and helmet just for you 
+</Typography>
+</div>
+<div className={classes.flexItem}>
+<Typography variant="h5" align="center" className={classes.typoColor}>Fair</Typography>
+<Typography>Prices so fair, there is no need to haggle</Typography>
+</div>
+<div className={classes.flexItem}>
+<Typography variant="h5" align="center" className={classes.typoColor}>Convenient </Typography>
+<Typography>Easy to use. A trusted rider is just a click away</Typography>
+</div>
+</div>
+</div>
     </div>
   );
 };

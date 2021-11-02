@@ -16,6 +16,7 @@ export default function Logout(){
       await axios.get("/logout")
       .then(res => {
         console.log("successful!!!")
+        localStorage.removeItem("LoggedUserId")
         removeCookie("user", {path: "/", maxAge: -1})
         setUser()
         history.push("/")

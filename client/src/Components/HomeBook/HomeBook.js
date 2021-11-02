@@ -1,36 +1,75 @@
 import { useState } from "react";
+import Slider from "react-slick";
 import Typography from "@material-ui/core/typography";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
-import LautechImage from "../../assets/images.jpg";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Modal from "../Header/Steppers/Modal";
+import Image from "../../assets/bike6.jpg"
+
+import Image1 from "../../assets/img1.jpg";
+import Image2 from "../../assets/img2.jpg";
+import Image3 from "../../assets/img6.jpg";
+import Image4 from "../../assets/img7.jpg";
+import Image5 from "../../assets/img8.jpg";
+import Image6 from "../../assets/img9.jpg";
+import Image7 from "../../assets/img13.jpg";
+import Image8 from "../../assets/img15.jpg";
+import Image9 from "../../assets/img16.jpg";
+import Image10 from "../../assets/img17.jpg";
+import Image11 from "../../assets/img19.jpg";
+import Image12 from "../../assets/img21.jpg";
+import Image13 from "../../assets/img22.jpg";
+import Image14 from "../../assets/img23.jpg";
+import Image15 from "../../assets/img24.jpg";
+import Image16 from "../../assets/img25.jpg";
+import Image17 from "../../assets/img26.jpg";
+import Image18 from "../../assets/img28.jpg";
+import Image19 from "../../assets/img32.jpg";
+
+
+
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(15),
+    marginTop: theme.spacing(8),
     textAlign: "right",
     width: "100%",
+    height: 400,
     position: "relative",
-    display: "flex",
+    //alignItems: "center",
+    //display: "flex",
+    //justifyContent: "center",
+    //backgroundPosition: "center center",
+    //backgroundImage: `url(${Image})`,
+    //backgroundRepeat: "no-repeat",
+    //backgroundSize: "cover",
+    
   },
 
   typo: {
-    color: "blue",
-    fontSize: "1.5rem",
-    textAlign: "right",
+    
+    color: "white",
+    fontSize: "2.5rem",
+    textAlign: "center",
     margin: "1.5rem",
-    fontWeight: "lighter",
+    fontWeight: 700,
+    zIndex: 1,
   },
+
   buttonItem: {
     color: "white",
     backgroundColor: "tomato",
     fontSize: "1.5rem",
-    right: "9rem",
-
+    
     "&:hover": {
       backgroundColor: "red",
     },
   },
+  
   LogImage: {
     width: "50%",
     height: "20rem",
@@ -42,10 +81,34 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
   },
   LogDesc: {
-    width: "30%",
-    height: "100%",
+    
+    width: "100%",
+    height: 400,
+    position: "absolute",
+    textAlign: "center",
+    top: "6rem",
+    
   },
+
+  image: {
+    height:400,
+    width: "100%",
+    objectFit: "cover",
+    opacity: 0.8,
+  },
+
+  dimDiv: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: 400,
+    width: "100%",
+    backgroundColor: `rgba(0,0,0,.6)`,
+    zIndex: 0,
+
+  }
 }));
+
 
 const HomeBook = () => {
   const classes = useStyles();
@@ -60,15 +123,92 @@ const HomeBook = () => {
     setOpen(false);
   };
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    autoplaySpeed: 5000,
+    autoplay: true,
+    easing: "linear",
+    fade: true,
+    speed: 7000,
+    slideToShow: 1,
+    slideToScroll: 1,
+  };
+
   return (
     <div className={classes.root}>
-      <div className={classes.LogImage}>
-        <img src={LautechImage} alt="lauPics" className={classes.realImage} />
-      </div>
-
-      <div className={classes.logDesc}>
+    
+    
+    
+   <div>
+   <div className={classes.dimDiv}></div>
+   <Slider {...settings}>
+   
+   <div>
+          <img src={Image1} className={classes.image} />
+        </div>
+        <div>
+          <img src={Image2} className={classes.image} />
+        </div>
+        <div>
+          <img src={Image3} className={classes.image} />
+        </div>
+        <div>
+          <img src={Image4} className={classes.image} />
+        </div>
+        <div>
+          <img src={Image5} className={classes.image} />
+        </div>
+        
+        <div>
+          <img src={Image6} className={classes.image} />
+        </div>
+        
+        <div>
+          <img src={Image7} className={classes.image} />
+        </div>
+        <div>
+          <img src={Image8} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image9} className={classes.image} />
+        </div> 
+        
+        <div>
+          <img src={Image11} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image12} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image13} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image14} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image15} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image16} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image17} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image18} className={classes.image} />
+        </div> 
+        <div>
+          <img src={Image19} className={classes.image} />
+        </div> 
+         
+         
+        </Slider>
+        </div>
+       <div className={classes.LogDesc}>
+        
         <Typography variant="h5" className={classes.typo}>
-          LAUTECH Transport <span style={{ color: "tomato" }}>Service</span>
+          LAUTECH Transport <span style={{ color: "red" }}>Service</span>
         </Typography>
         <Typography variant="h5" className={classes.typo}>
           {" "}
@@ -84,7 +224,8 @@ const HomeBook = () => {
           Book now{" "}
         </Button>
         {open && <Modal open={open} handleClose={handleClose} />}
-      </div>
+      </div> 
+       
     </div>
   );
 };

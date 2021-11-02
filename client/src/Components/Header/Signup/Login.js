@@ -97,8 +97,13 @@ const Login = () => {
 
     axios
       .post("http://localhost:5000/login", data)
+
+      
       .then( async (response) => {
-        
+        console.log(response)
+        let loggedUserId = response.data.loggedUserId;
+        console.log(loggedUserId)
+        localStorage.setItem('LoggedUserId',loggedUserId)
         createCookie(response.data.token)
         await setUserContext();
         history.push("/")

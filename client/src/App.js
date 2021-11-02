@@ -15,6 +15,8 @@ import DriverSignUp from "./Components/Header/Signup/Driver";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import useFindUser from "./Components/Header/Signup/FindUSer";
 import ProtectedRoute from "./Components/Header/ProtectedRoute";
+import PaymentForm from "./Components/Header/Steppers/paymentForm";
+
 
 import {
   faPhone,
@@ -67,6 +69,7 @@ function App() {
           <ProtectedRoute path="/contact" exact component={Contact} />
           <Route path="/terms" exact component={Terms} />
           <Route path="/privacy" component={Privacy} />
+          <Route path="/payment" component={PaymentForm} />
           <Route path="/about" component={Aboutus} />
           <Route path="/faq" component={Faq} />
           <Route path="/" exact component={Home} />

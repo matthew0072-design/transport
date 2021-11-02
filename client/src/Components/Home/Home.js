@@ -1,7 +1,7 @@
 import Header from "../Header/Header";
 import HomeBook from "../HomeBook/HomeBook";
 import HomeInfo from "../HomeBook/HomeInfo";
-import HomeVerify from "../HomeBook/homeVerify";
+
 import HomeFooter from "../HomeBook/HomeFooter";
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
       <Header />
       <HomeBook />
       <HomeInfo />
-      <HomeVerify />
+      
       <HomeFooter />
     </div>
   );
